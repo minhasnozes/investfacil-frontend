@@ -28,7 +28,8 @@ export async function apiFetch<T>(path: string, { body, headers, ...init }: Requ
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      // Content-Type só quando há body: em GET ele forçaria um preflight CORS desnecessário
+      ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
